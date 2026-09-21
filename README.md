@@ -1,10 +1,10 @@
 # MTC Center — Course Management System
 
-A full-stack course management platform designed to simplify course administration, student registration, learning resources, and educational operations.
+A full-stack course management platform designed to simplify course administration, student registration, enrollment workflows, learning resources, and educational operations.
 
-This repository is a **portfolio and case study** showcasing the system's features, user workflows, interface design, and deployment.
+This repository is a **portfolio and case study** showcasing the system's features, user workflows, interface design, technical architecture, security, and deployment.
 
-> **Note:** The source code is kept private. This repository contains selected screenshots, documentation, and project case studies.
+> **Note:** The source code is kept private. This repository contains selected screenshots, documentation, architecture information, and project case studies.
 
 ---
 
@@ -13,7 +13,7 @@ This repository is a **portfolio and case study** showcasing the system's featur
 * **Website:** https://mtccenters.com
 * **Frontend:** React
 * **Backend:** Spring Boot REST API
-* **Database:** PostgreSQL
+* **Database:** PostgreSQL on Neon
 
 ---
 
@@ -21,9 +21,20 @@ This repository is a **portfolio and case study** showcasing the system's featur
 
 MTC Center is a course management system that supports different user roles and educational workflows.
 
-The platform allows students to explore courses, register for available courses, access lecture resources, and manage their profiles.
+The platform allows students to:
 
-Administrators can manage students, instructors, courses, categories, batches, lectures, lecture resources, registrations, and contact messages through the administrative interface.
+* Explore available courses.
+* View course details.
+* Register for courses.
+* Join batches through enrollment requests.
+* Use batch codes to request enrollment.
+* Access their enrolled courses.
+* Access authorized lecture resources.
+* Manage their profiles.
+
+Administrators can manage students, instructors, courses, categories, batches, lectures, lecture resources, registrations, enrollment requests, and contact messages through the administrative interface.
+
+The platform also supports multiple types of learning resources, including uploaded files, uploaded videos, Google Drive links, and YouTube videos.
 
 ---
 
@@ -39,7 +50,9 @@ Administrators can manage students, instructors, courses, categories, batches, l
 * Course details
 * Course registration
 * My Courses
-* Access to lecture resources
+* Batch enrollment using a batch code
+* Enrollment request workflow
+* Access to authorized lecture resources
 * Student profile management
 
 ### 🛠️ Admin Features
@@ -53,14 +66,78 @@ Administrators can manage students, instructors, courses, categories, batches, l
 * Lecture management
 * Lecture resources management
 * Course registration management
-* Assigning instructors to courses
+* Batch enrollment request management
+* Accept or reject student enrollment requests
+* Directly assign students to batches
+* Assign instructors to courses/batches
 * Contact message management
 
 ### 👨‍🏫 Instructor
 
-Currently, instructors can have accounts and be assigned to courses by administrators.
+Currently, instructors can have accounts and be assigned to courses/batches by administrators.
 
 > Instructor-specific dashboard features and workflows are planned for future development.
+
+### 📚 Lecture Resources
+
+Lectures can contain different types of learning resources:
+
+* Uploaded files
+* Uploaded videos
+* Google Drive links
+* YouTube links
+* Embedded YouTube video playback in the student view
+
+This allows the platform to support both platform-hosted and externally hosted educational content.
+
+---
+
+## 📝 Student Enrollment Workflow
+
+The platform supports two ways of adding students to batches.
+
+### Direct Admin Assignment
+
+An administrator can directly select a student and assign them to a batch.
+
+```text
+Admin
+  │
+  ▼
+Select Batch
+  │
+  ▼
+Select Student
+  │
+  ▼
+Assign Student
+  │
+  ▼
+Student Added to Batch
+```
+
+### Batch Code Enrollment Request
+
+Students can also use a batch code to request enrollment.
+
+```text
+Student
+   │
+   ▼
+Enter Batch Code
+   │
+   ▼
+Enrollment Request
+   │
+   ▼
+Admin Review
+   │
+   ├── Accept ──► Student Added to Batch
+   │
+   └── Reject ──► Request Rejected
+```
+
+This allows students to request access while keeping the final enrollment decision under administrator control.
 
 ---
 
@@ -136,7 +213,7 @@ The student workflow includes registration, verification, authentication, dashbo
 
 ### 🛠️ Admin Dashboard
 
-The administration interface provides centralized management of the platform's users, courses, categories, batches, instructors, registrations, lectures, resources, and contact messages.
+The administration interface provides centralized management of the platform's users, courses, categories, batches, instructors, registrations, lectures, resources, enrollment requests, and contact messages.
 
 <p align="center">
   <img src="screenshots/admin-dashboard.png" alt="Admin Dashboard" width="800">
@@ -172,14 +249,14 @@ Administrators can create and manage courses, batches, lectures, and learning re
 
 ### 📝 Registration & Requests
 
-The administration interface provides visibility into course registrations and batch-related student requests.
+The administration interface provides visibility into course registrations and batch-related student enrollment requests.
 
 <p align="center">
   <img src="screenshots/admin-course-registrations.png" alt="Admin Course Registrations" width="800">
 </p>
 
 <p align="center">
-  <img src="screenshots/admin-batch-requests.png" alt="Admin Batch Requests" width="800">
+  <img src="screenshots/admin-batch-requests.png" alt="Admin Batch Enrollment Requests" width="800">
 </p>
 
 ### 🗂️ Categories & Communication
@@ -196,39 +273,30 @@ Administrators can manage course categories and review contact messages submitte
 
 > Additional screenshots covering specific administrative actions such as creating, editing, deleting, assigning students, and managing batches are available in the [`screenshots`](screenshots) directory.
 
-
-### Home Page
-
-The landing page introduces the platform and highlights available course content.
-
-### Student Experience
-
-The student experience includes authentication, dashboard access, course registration, and access to lecture resources.
-
-### Admin Experience
-
-The administrative interface provides tools for managing the platform's educational data and operations, including courses, batches, lectures, lecture resources, students, instructors, and registrations.
-
-> Detailed screenshots and feature demonstrations are available in the `screenshots` directory.
-
 ---
 
 ## 🔐 Security, Authentication & Authorization
 
 The system implements authentication and authorization using **JWT (JSON Web Tokens)**.
 
-The authentication flow includes:
+The authentication and security architecture includes:
 
 * User registration
-* Login
 * Email verification code
 * Password setup
 * JWT-based authentication
 * Role-based authorization
 * Protected API endpoints
-* Role-specific access to platform features
+* Rate limiting
+* OTP request and verification protection
+* Brute-force login protection
+* Temporary account/IP blocking after repeated failed attempts
+* In-memory security caching
+* Resource-level authorization
 
-Different user roles have access to different platform features based on their authorization level.
+Students can only access lecture resources they are authorized to access through their course/batch relationship.
+
+Detailed security implementation is documented in the [Authentication & Security Case Study](case-studies/01-authentication-and-security.md).
 
 ---
 
@@ -244,6 +312,8 @@ This helps:
 * Reduce bandwidth consumption
 * Deliver optimized images to the frontend
 
+More details are available in the [Image Optimization Case Study](case-studies/02-image-optimization.md).
+
 ---
 
 ## 🧰 Technology Stack
@@ -255,6 +325,7 @@ This helps:
 * HTML5
 * CSS3
 * Responsive UI design
+* Light/Dark themes
 
 ### Backend
 
@@ -263,18 +334,24 @@ This helps:
 * REST API
 * JWT Authentication
 * Role-based Authorization
+* Rate limiting
+* Brute-force protection
+* OTP protection
 * Image processing and WebP conversion
 
 ### Database
 
 * PostgreSQL
+* Neon
 
 ### Deployment
 
 * Cloudflare Pages
-* VPS deployment
+* VPS
 * Docker
-* Custom domain configuration
+* Nginx
+* HTTPS / SSL configuration
+* Custom domains
 
 ---
 
@@ -287,7 +364,39 @@ The interface is designed to support:
 * Clear navigation
 * Role-specific workflows
 * Course-focused user experience
+* Multiple learning resource formats
+* Student-friendly enrollment workflows
 * Accessible learning resources
+
+---
+
+## 📚 Case Studies
+
+Detailed technical documentation is available in the following case studies:
+
+### 🔐 Authentication & Security
+
+Covers JWT authentication, role-based authorization, protected endpoints, rate limiting, OTP protection, brute-force protection, security caching, and resource-level authorization.
+
+[View Authentication & Security Case Study](case-studies/01-authentication-and-security.md)
+
+### 🖼️ Image Optimization
+
+Documents the image upload pipeline and automatic WebP conversion used to reduce image size, storage usage, and bandwidth consumption.
+
+[View Image Optimization Case Study](case-studies/02-image-optimization.md)
+
+### 📚 Course & Batch Management
+
+Covers course management, batch management, direct student assignment, batch-code enrollment requests, admin approval/rejection, instructor assignment, lectures, and learning resources.
+
+[View Course & Batch Management Case Study](case-studies/03-course-and-batch-management.md)
+
+### 🚀 Deployment & Production Infrastructure
+
+Documents the production architecture using Cloudflare Pages, VPS, Docker, Nginx reverse proxy, HTTPS, Spring Boot, and Neon PostgreSQL.
+
+[View Deployment & Infrastructure Case Study](case-studies/04-deployment-and-infrastructure.md)
 
 ---
 
@@ -295,10 +404,15 @@ The interface is designed to support:
 
 ```text
 course-management-system-portfolio/
+
 │
 ├── screenshots/
 │
 ├── case-studies/
+│   ├── 01-authentication-and-security.md
+│   ├── 02-image-optimization.md
+│   ├── 03-course-and-batch-management.md
+│   └── 04-deployment-and-infrastructure.md
 │
 ├── architecture/
 │
@@ -309,9 +423,38 @@ course-management-system-portfolio/
 
 ## 🚀 Deployment
 
-The frontend is deployed through Cloudflare Pages, while the backend is deployed on a VPS.
+The production environment uses a separate frontend and backend architecture.
 
-The application uses a separate frontend and backend architecture connected through REST APIs.
+```text
+React Frontend
+      │
+      │ HTTPS / REST API
+      ▼
+Spring Boot Backend
+      │
+      ▼
+Docker + VPS
+      │
+      ▼
+Nginx Reverse Proxy
+      │
+      ▼
+Neon PostgreSQL
+```
+
+### Production Environment
+
+* **Frontend:** Cloudflare Pages
+* **Frontend Domain:** https://mtccenters.com
+* **Backend:** Spring Boot
+* **Backend Domain:** https://api.mtccenters.com
+* **Backend Hosting:** VPS
+* **Containerization:** Docker
+* **Reverse Proxy:** Nginx
+* **Database:** Neon PostgreSQL
+* **Communication:** HTTPS / REST API
+
+More details are available in the [Deployment & Production Infrastructure Case Study](case-studies/04-deployment-and-infrastructure.md).
 
 ---
 
@@ -342,13 +485,18 @@ Responsibilities include:
 * Backend API development
 * JWT authentication and authorization
 * Authentication workflows
+* Rate limiting and security protection
 * PostgreSQL database integration
 * Database-related functionality
 * Admin functionality
-* Course and lecture management
+* Course and batch management
+* Student enrollment workflows
+* Lecture management
 * Lecture resource management
 * Image processing and WebP optimization
 * Deployment and production configuration
+* Docker deployment
+* Nginx and HTTPS configuration
 * UI improvements and responsive design
 
 ---
@@ -356,12 +504,14 @@ Responsibilities include:
 ## 📌 Future Improvements
 
 * Payment integration for online course registration and payments
+* Automatic enrollment after successful payment
 * Instructor dashboard
 * Instructor-specific course workflows
 * Additional learning features
+* Student progress tracking
+* Attendance management
 * Expanded reporting and analytics
 * Further platform improvements
-
 
 ---
 
