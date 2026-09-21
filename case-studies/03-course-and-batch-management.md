@@ -228,4 +228,3 @@ This architecture provides:
 * Direct assignment when needed.
 * Batch-based organization.
 * Multiple content delivery methods.
-* P
