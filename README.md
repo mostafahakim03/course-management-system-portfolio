@@ -355,11 +355,13 @@ Responsibilities include:
 
 ## 📌 Future Improvements
 
+* Payment integration for online course registration and payments
 * Instructor dashboard
 * Instructor-specific course workflows
 * Additional learning features
 * Expanded reporting and analytics
 * Further platform improvements
+
 
 ---
 
