@@ -393,7 +393,7 @@ The architecture diagram illustrates:
 
 <p align="center">
   <img
-    src="architecture/mtc-center-system-architecture.png"
+    src="architecture/mtc-center-system-architecture.jpg"
     alt="MTC Center System Architecture"
     width="1200"
   >
