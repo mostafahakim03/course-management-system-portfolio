@@ -275,6 +275,24 @@ Administrators can manage course categories and review contact messages submitte
 
 ---
 
+## 📧 Email & Notification Service
+
+The system includes email-based communication for
+authentication and important student workflow events.
+
+Supported use cases include:
+
+- Email verification codes during registration
+- Student enrollment status notifications
+- Batch acceptance notifications
+- Lecture publication notifications (if implemented)
+- Other system-related email notifications
+
+Email delivery is handled through the backend's
+email service integration.
+
+---
+
 ## 🔐 Security, Authentication & Authorization
 
 The system implements authentication and authorization using **JWT (JSON Web Tokens)**.
@@ -352,6 +370,35 @@ More details are available in the [Image Optimization Case Study](case-studies/0
 * Nginx
 * HTTPS / SSL configuration
 * Custom domains
+
+---
+
+## 🏗️ System Architecture
+
+The MTC Center platform follows a layered architecture
+consisting of a React frontend, Spring Boot REST API,
+Nginx reverse proxy, Docker deployment, and Neon PostgreSQL.
+
+The architecture diagram illustrates:
+
+- Frontend and backend communication
+- VPS and Docker infrastructure
+- Nginx reverse proxy and HTTPS
+- JWT authentication and security layers
+- Student enrollment workflows
+- Lecture resource management
+- Email notification service
+- Image optimization and WebP conversion
+- Managed PostgreSQL database
+
+<p align="center">
+  <img
+    src="architecture/mtc-center-system-architecture.png"
+    alt="MTC Center System Architecture"
+    width="1200"
+  >
+</p>
+
 
 ---
 
